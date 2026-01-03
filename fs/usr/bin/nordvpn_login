@@ -15,6 +15,10 @@ sleep 10
 # Make sure the token isn't destroyed on logout
 nordvpn logout --persist-token > /dev/null
 
+# Set settings for Synology compatibility
+nordvpn set technology openvpn
+nordvpn set protocol tcp
+
 # Login with token
 if [[ -n ${NORDVPN_TOKEN} ]]; then
   nordvpn login --token "${NORDVPN_TOKEN}" || {
