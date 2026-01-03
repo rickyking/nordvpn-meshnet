@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Ensure runtime directory exists
+if [[ ! -d /run/nordvpn ]]; then
+  mkdir -m 0770 /run/nordvpn
+fi
+
+# Start nordvpnd with s6 notification support
+# This allows s6 to know when the service is actually ready (if nordvpnd supported notification, 
+# but here it likely relies on s6 waiting for the process).
+# The reference used `exec s6-notifyoncheck ...` which effectively polls.
+
+if [[ -n ${NORDVPN_MESHNET_DEBUG} ]]; then
+  exec 2>&1
+  exec s6-notifyoncheck -n 60 -d /usr/sbin/nordvpnd
+else
+  exec s6-notifyoncheck -n 60 -d /usr/sbin/nordvpnd > /dev/null
+fi

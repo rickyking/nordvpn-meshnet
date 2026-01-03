@@ -1,0 +1,57 @@
+#!/usr/bin/with-contenv bash
+
+# Set delimiter to comma for parsing lists
+IFS=','
+
+# Enable Meshnet
+echo "Enabling Meshnet..."
+count=0
+# Loop until success or timeout
+while [[ $(nordvpn set meshnet on) != *"Meshnet is set to 'on' successfully"* ]]; do
+  ((count++))
+  if [[ $count -ge 5 ]]; then
+      echo "Could not enable Meshnet after 5 attempts."
+      exit 1
+  fi
+  echo "Failed to enable Meshnet, retrying... ($count/5)"
+  sleep 2
+done
+
+echo "Meshnet enabled successfully."
+
+# Set nickname of this instance on the Meshnet network
+if [[ -n ${NORDVPN_NICKNAME} ]]; then
+  nordvpn meshnet set nickname "${NORDVPN_NICKNAME}"
+fi
+
+# Function to apply permissions
+apply_perms() {
+    local type=$1
+    local action=$2
+    local list_str=$3
+    
+    if [[ -n ${list_str} ]]; then
+        read -ra items <<< "${list_str}"
+        for item in "${items[@]}"; do
+            echo "Setting meshnet peer $type $action for $item"
+            nordvpn meshnet peer $type $action "$item"
+        done
+    fi
+}
+
+# Apply Deny rules
+apply_perms "routing" "deny" "${NORDVPN_DENY_PEER_ROUTING}"
+apply_perms "local" "deny" "${NORDVPN_DENY_PEER_LOCAL}"
+apply_perms "fileshare" "deny" "${NORDVPN_DENY_PEER_FILESHARE}"
+apply_perms "incoming" "deny" "${NORDVPN_DENY_PEER_REMOTE}"
+
+# Apply Allow rules
+apply_perms "routing" "allow" "${NORDVPN_ALLOW_PEER_ROUTING}"
+apply_perms "local" "allow" "${NORDVPN_ALLOW_PEER_LOCAL}"
+apply_perms "fileshare" "allow" "${NORDVPN_ALLOW_PEER_FILESHARE}"
+apply_perms "incoming" "allow" "${NORDVPN_ALLOW_PEER_REMOTE}"
+
+# Reset delimiter
+IFS=' '
+
+exit 0

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Spin up connection check to verify if Meshnet is running
+echo "Starting Meshnet watchdog..."
+
+# Default healthcheck URL
+CHECK_URL="${NORDVPN_HEALTHCHECK_URL:-www.google.com}"
+INTERVAL="${NORDVPN_HEALTHCHECK_INTERVAL:-300}"
+
+while true; do
+  sleep "${INTERVAL}"
+  # Check if we can reach the target. Expect 200-399 status code.
+  if [[ ! $(curl -Is -m 30 -o /dev/null -w "%{http_code}" "${CHECK_URL}") =~ ^[23] ]]; then
+    echo "Health check failed (cannot reach ${CHECK_URL}), restarting service..."
+    nordvpn status
+    # Restart nordvpn service using s6-svc
+    # -wR: wait for finish then restart? or just restart
+    # The reference used `s6-svc -wR -t` which sends a TERM signal and waits for restart.
+    s6-svc -wR -t /var/run/s6/services/nordvpn
+    
+    # Or should we exit the container to let Docker restart it?
+    # Reference: echo "Health check address failed to connect, killing container!" && exit 1
+    # Let's stick to killing the container so Docker creates a fresh one.
+    echo "Health check address failed to connect, exiting container to force restart!"
+    exit 1
+  fi
+done
+
+exit 0
