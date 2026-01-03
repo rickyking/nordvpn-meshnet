@@ -3,7 +3,7 @@ FROM ghcr.io/linuxserver/baseimage-ubuntu:jammy
 LABEL maintainer="Antigravity"
 
 # Configure the NordVPN client version to install at build (optional override)
-ARG NORDVPN_CLIENT_VERSION
+ARG NORDVPN_CLIENT_VERSION=3.18.2
 
 # Avoid interactions during build process
 ARG DEBIAN_FRONTEND=noninteractive
