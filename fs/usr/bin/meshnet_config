@@ -20,12 +20,17 @@ meshnet_enabled=false
 while [[ $meshnet_enabled == false && $count -lt 5 ]]; do
   result=$(nordvpn set meshnet on 2>&1)
   
-  if [[ $result == *"Meshnet is set to 'on' successfully"* ]] || [[ $result == *"Meshnet is set to 'enabled' successfully"* ]] || [[ $result == *"Meshnet is already enabled"* ]]; then
+  # Check for success in the output
+  if [[ $result == *"uccess"* ]] || [[ $result == *"ready enabled"* ]]; then
     meshnet_enabled=true
   else
     ((count++))
     echo "Failed to enable Meshnet, retrying... ($count/5)"
     echo "Error: $result"
+    echo "Current Status:"
+    nordvpn status
+    echo "Current Settings:"
+    nordvpn settings
     sleep 5
   fi
 done
