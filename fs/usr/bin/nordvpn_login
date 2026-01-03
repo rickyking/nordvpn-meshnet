@@ -16,7 +16,8 @@ sleep 10
 nordvpn logout --persist-token > /dev/null
 
 # Set settings for Synology compatibility
-nordvpn set technology nordlynx
+nordvpn set technology openvpn
+nordvpn set protocol tcp
 
 # Login with token
 if [[ -n ${NORDVPN_TOKEN} ]]; then

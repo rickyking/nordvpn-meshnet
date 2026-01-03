@@ -1,0 +1,14 @@
+services:
+  nordvpn-meshnet:
+    build: .
+    container_name: nordvpn-meshnet-local
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    env_file:
+      - .env
+    volumes:
+      - ./nordvpn_data_local:/var/lib/nordvpn
+    hostname: meshnet-local
+    network_mode: bridge

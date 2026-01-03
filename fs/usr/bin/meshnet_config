@@ -1,5 +1,8 @@
 #!/usr/bin/with-contenv bash
  
+# Give things a bit more time to settle
+sleep 30
+
 # Set delimiter to comma
 IFS=','
 

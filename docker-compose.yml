@@ -5,9 +5,8 @@ services:
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
-      # SYS_MODULE may be needed if /dev/net/tun is not available and needs to be inserted,
-      # but usually on Synology loading the module on host is preferred.
-      # - SYS_MODULE 
+      - SYS_ADMIN
+      - SYS_MODULE 
     devices:
       - /dev/net/tun:/dev/net/tun
     env_file:
