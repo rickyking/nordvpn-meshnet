@@ -7,9 +7,6 @@ services:
       - NET_ADMIN
       - SYS_ADMIN
       - SYS_MODULE 
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
-      - net.ipv6.conf.default.disable_ipv6=1
     devices:
       - /dev/net/tun:/dev/net/tun
     env_file:
@@ -19,10 +16,7 @@ services:
       - ./nordvpn_data:/var/lib/nordvpn
       - /lib/modules:/lib/modules:ro
     hostname: nordvpn-synology-nas    # Make sure hostname is set! Without it, every restart will add a new peer to your Meshnet.
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
-    network_mode: bridge
+    network_mode: host
     privileged: true
     # ports:
     #   - 8080:80 # If you want to use this as a gateway for other services

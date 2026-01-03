@@ -7,11 +7,6 @@ while [[ $(nordvpn account 2>&1) != *"Active"* ]]; do
 done
 echo "Account is active."
 
-# Attempt to connect to a VPN server first to initialize networking
-echo "Connecting to VPN..."
-nordvpn connect
-sleep 5
-
 # Set delimiter to comma
 IFS=','
 
