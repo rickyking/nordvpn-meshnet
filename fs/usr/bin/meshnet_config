@@ -16,7 +16,8 @@ while [[ $meshnet_enabled == false && $count -lt 5 ]]; do
   else
     ((count++))
     echo "Failed to enable Meshnet, retrying... ($count/5)"
-    sleep 2
+    echo "Error: $result"
+    sleep 5
   fi
 done
 
