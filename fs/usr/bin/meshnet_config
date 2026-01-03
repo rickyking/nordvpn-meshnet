@@ -7,6 +7,12 @@ while [[ $(nordvpn account 2>&1) != *"Active"* ]]; do
 done
 echo "Account is active."
 
+# Attempt to connect to a VPN server first to initialize networking
+# This ensures that even if Meshnet fails, we have a working VPN connection
+echo "Connecting to VPN..."
+nordvpn connect
+sleep 5
+
 # Set delimiter to comma
 IFS=','
 
@@ -34,11 +40,11 @@ while [[ $meshnet_enabled == false && $count -lt 5 ]]; do
 done
 
 if [[ $meshnet_enabled == false ]]; then
-  echo "Could not enable Meshnet after 5 attempts."
-  exit 1
+  echo "Could not enable Meshnet after 5 attempts. Continuing with standard VPN connection..."
+  # Do not exit, keep the container alive so VPN works
+else
+  echo "Meshnet enabled successfully."
 fi
-
-echo "Meshnet enabled successfully."
 
 # Set nickname of this instance on the Meshnet network
 if [[ -n ${NORDVPN_NICKNAME} ]]; then
