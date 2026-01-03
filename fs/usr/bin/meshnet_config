@@ -3,8 +3,14 @@
 # Set delimiter to comma
 IFS=','
 
+# Disable firewall to avoid conflicts on some systems
+nordvpn set firewall off
+
 # Set technology to OpenVPN for compatibility on some systems (like Synology)
 nordvpn set technology openvpn
+
+# Reset Meshnet state
+nordvpn set meshnet off
 
 # Enable Meshnet, this creates the interface and connects
 echo "Enabling Meshnet..."
