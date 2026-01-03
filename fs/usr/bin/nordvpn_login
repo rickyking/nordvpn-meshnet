@@ -2,8 +2,12 @@
 
 # Do nothing if NordVPN isn't available
 while [ ! -S /run/nordvpn/nordvpnd.sock ] ; do
+  echo "Waiting for NordVPN socket..."
   sleep 1
 done
+
+# Give the daemon a moment to fully initialize
+sleep 3
 
 # Set the token from file if ENV is not set
 [[ -z "${NORDVPN_TOKEN}" ]] && [[ -f "${NORDVPN_TOKENFILE}" ]] && NORDVPN_TOKEN="$(head -n 1 "${NORDVPN_TOKENFILE}")"
