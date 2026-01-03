@@ -11,7 +11,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Install dependencies, get the NordVPN Repo, install NordVPN client, cleanup
 RUN echo "**** Install dependencies ****" && \
     apt-get update && \
-    apt-get install -y curl && \
+    apt-get install -y curl iputils-ping iproute2 && \
     echo "**** Install NordVPN ****" && \
     if [ -z "$NORDVPN_CLIENT_VERSION" ]; then \
         curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh | sh -s -- -n; \
@@ -25,6 +25,9 @@ RUN echo "**** Install dependencies ****" && \
         /var/cache/apt/archives/* \
         /var/lib/apt/lists/* \
         /var/tmp/* && \
+    echo "**** Switch to iptables-legacy ****" && \
+    update-alternatives --set iptables /usr/sbin/iptables-legacy && \
+    update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy && \
     echo "**** Finished software setup ****"
 
 # Copy all the files we need in the container
