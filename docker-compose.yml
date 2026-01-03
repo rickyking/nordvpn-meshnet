@@ -1,6 +1,6 @@
 services:
   nordvpn-meshnet:
-    image: ghcr.io/${GITHUB_USERNAME:-CHANGE_ME_USERNAME}/nordvpn-meshnet:latest
+    image: ghcr.io/rickyking/nordvpn-meshnet:latest
     container_name: nordvpn-meshnet
     restart: unless-stopped
     cap_add:
