@@ -15,13 +15,11 @@ services:
     volumes:
       # Persist NordVPN state (keys, config)
       - ./nordvpn_data:/var/lib/nordvpn
-    hostname: kingnas    # Make sure hostname is set! Without it, every restart will add a new peer to your Meshnet.
+    hostname: nordvpn-synology-nas    # Make sure hostname is set! Without it, every restart will add a new peer to your Meshnet.
     network_mode: host
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
-      - net.ipv6.conf.default.disable_ipv6=1
     privileged: true
     # ports:
     #   - 8080:80 # If you want to use this as a gateway for other services
+
 
 
