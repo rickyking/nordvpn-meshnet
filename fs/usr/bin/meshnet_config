@@ -3,6 +3,9 @@
 # Set delimiter to comma
 IFS=','
 
+# Set technology to OpenVPN for compatibility on some systems (like Synology)
+nordvpn set technology openvpn
+
 # Enable Meshnet, this creates the interface and connects
 echo "Enabling Meshnet..."
 count=0
