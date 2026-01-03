@@ -1,7 +1,11 @@
 #!/usr/bin/with-contenv bash
  
-# Give things a bit more time to settle
-sleep 30
+# Wait for the account to be active
+echo "Waiting for NordVPN account to be active..."
+while [[ $(nordvpn account 2>&1) != *"Active"* ]]; do
+  sleep 2
+done
+echo "Account is active."
 
 # Set delimiter to comma
 IFS=','

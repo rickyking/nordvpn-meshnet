@@ -38,4 +38,4 @@ COPY /fs /
 ENV S6_CMD_WAIT_FOR_SERVICES=1
 
 # Run the login, config, and watch scripts
-CMD ["/bin/bash", "-c", "nordvpn_login && meshnet_config && meshnet_watch"]
+CMD nordvpn_login && meshnet_config && meshnet_watch
