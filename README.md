@@ -19,17 +19,35 @@ You can generate a token from your NordVPN dashboard or by using `nordvpn login 
    - Ensure you have **Container Manager** (or Docker) installed.
    - Enabling SSH is recommended for troubleshooting but you can use the Task Scheduler or Container Manager UI.
    - **Crucial**: The container needs access to `/dev/net/tun`.
-     - On some Synology DSM versions, you might need to run a script at boot to create the TUN device if it doesn't exist:
-       ```bash
-       #!/bin/sh -e
-       if [ ! -d /dev/net ]; then mkdir -p /dev/net; fi
-       if [ ! -c /dev/net/tun ]; then mknod /dev/net/tun c 10 200; fi
-       chmod 0666 /dev/net/tun
-       ```
+     - On some Synology DSM versions, the TUN device might not be available by default. You can create it at boot using a scheduled task:
+       1. **Control Panel** -> **Task Scheduler**.
+       2. **Create** -> **Triggered Task** -> **User-defined script**.
+       3. **General** tab:
+          - Task: "Enable TUN"
+          - User: `root` (Important!)
+          - Event: **Boot-up**
+       4. **Task Settings** tab -> **User-defined script**:
+          ```bash
+          #!/bin/sh -e
+          # Create the necessary directory
+          if [ ! -d /dev/net ]; then mkdir -p /dev/net; fi
+          
+          # Create the TUN device node if it doesn't exist
+          if [ ! -c /dev/net/tun ]; then mknod /dev/net/tun c 10 200; fi
+          
+          # Set permissions
+          chmod 0666 /dev/net/tun
+          
+          # Load the tun module if not already loaded
+          if ! lsmod | grep -q "^tun\s"; then
+            insmod /lib/modules/tun.ko
+          fi
+          ```
+       5. Save and then manually **Run** the task once to apply immediately.
 
 2. **Docker Compose**:
    Copy the `docker-compose.yml` file to your NAS.
-   Updates the `image` field to `ghcr.io/<your-github-username>/nordvpn-meshnet:latest`.
+   The `image` field is set to `ghcr.io/rickyking/nordvpn-meshnet:latest`.
    Set your `NORDVPN_TOKEN`.
 
    Run:

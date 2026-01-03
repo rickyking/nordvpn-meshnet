@@ -10,27 +10,12 @@ services:
       # - SYS_MODULE 
     devices:
       - /dev/net/tun:/dev/net/tun
-    environment:
-      - PUID=${PUID:-1026}
-      - PGID=${PGID:-100}
-      - TZ=${TZ:-Etc/UTC}
-      - NORDVPN_TOKEN=${NORDVPN_TOKEN}
-      - NORDVPN_TOKENFILE=${NORDVPN_TOKENFILE}
-      - NORDVPN_MESHNET_DEBUG=${NORDVPN_MESHNET_DEBUG}
-      - NORDVPN_HEALTHCHECK_INTERVAL=${NORDVPN_HEALTHCHECK_INTERVAL}
-      - NORDVPN_HEALTHCHECK_URL=${NORDVPN_HEALTHCHECK_URL}
-      - NORDVPN_NICKNAME=${NORDVPN_NICKNAME}
-      - NORDVPN_DENY_PEER_ROUTING=${NORDVPN_DENY_PEER_ROUTING}
-      - NORDVPN_DENY_PEER_LOCAL=${NORDVPN_DENY_PEER_LOCAL}
-      - NORDVPN_DENY_PEER_FILESHARE=${NORDVPN_DENY_PEER_FILESHARE}
-      - NORDVPN_DENY_PEER_REMOTE=${NORDVPN_DENY_PEER_REMOTE}
-      - NORDVPN_ALLOW_PEER_ROUTING=${NORDVPN_ALLOW_PEER_ROUTING}
-      - NORDVPN_ALLOW_PEER_LOCAL=${NORDVPN_ALLOW_PEER_LOCAL}
-      - NORDVPN_ALLOW_PEER_FILESHARE=${NORDVPN_ALLOW_PEER_FILESHARE}
-      - NORDVPN_ALLOW_PEER_REMOTE=${NORDVPN_ALLOW_PEER_REMOTE}
+    env_file:
+      - .env
     volumes:
       # Persist NordVPN state (keys, config)
       - ./nordvpn_data:/var/lib/nordvpn
+    hostname: kingnas    # Make sure hostname is set! Without it, every restart will add a new peer to your Meshnet.
     network_mode: bridge
     # ports:
     #   - 8080:80 # If you want to use this as a gateway for other services

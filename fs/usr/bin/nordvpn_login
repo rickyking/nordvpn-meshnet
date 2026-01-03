@@ -1,8 +1,7 @@
 #!/usr/bin/with-contenv bash
 
-# Do nothing if NordVPN isn't available (socket check)
+# Do nothing if NordVPN isn't available
 while [ ! -S /run/nordvpn/nordvpnd.sock ] ; do
-  echo "Waiting for NordVPN socket..."
   sleep 1
 done
 
@@ -10,19 +9,16 @@ done
 [[ -z "${NORDVPN_TOKEN}" ]] && [[ -f "${NORDVPN_TOKENFILE}" ]] && NORDVPN_TOKEN="$(head -n 1 "${NORDVPN_TOKENFILE}")"
 
 # Make sure the token isn't destroyed on logout
-# We use persist-token to avoid needing to re-enter credentials if container restarts but vol survives?
-# Actually, logout --persist-token keeps the token saved.
 nordvpn logout --persist-token > /dev/null
 
 # Login with token
 if [[ -n ${NORDVPN_TOKEN} ]]; then
-  echo "Logging in with token..."
   nordvpn login --token "${NORDVPN_TOKEN}" || {
-    echo "Invalid token or login failed."
+    echo "Invalid token."
     exit 1
   }
 else
-  echo "No token set. Please set NORDVPN_TOKEN env var."
+  echo "No token set."
   exit 1
 fi
 
