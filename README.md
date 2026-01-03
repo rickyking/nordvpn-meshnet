@@ -136,14 +136,25 @@ Ensure you have **Container Manager** (or Docker) installed. SSH access is recom
 2. Create your `.env` file:
    ```bash
    cp .env.template .env
-   nano .env  # Edit and add your token
+   # Edit .env and add your NORDVPN_TOKEN
    ```
 3. Start the container:
    ```bash
-   docker compose up -d
+   sudo docker-compose up -d
    ```
 
 Or use the **Project** feature in Synology Container Manager to upload the `docker-compose.yml`.
+
+### Known Limitations on Synology
+
+Due to kernel limitations (Linux 4.4.x) on many Synology NAS models, **Meshnet enablement may fail** with the error: *"We couldn't connect you to the VPN"*.
+
+This container includes a **Safe Mode** feature:
+- If Meshnet fails to enable after 5 attempts, the container **will not crash**.
+- It will automatically fall back to establishing a standard **NordLynx VPN connection**.
+- You can essentially use this container as a stable NordVPN client gateway, even if the specific Meshnet routing features are incompatible with your NAS kernel.
+
+**Workaround**: To achieve full Meshnet functionality on Synology, it is recommended to run a standard Linux VM (e.g., Ubuntu/Debian) using **Synology Virtual Machine Manager (VMM)** instead of Docker.
 
 ## Building Locally
 
