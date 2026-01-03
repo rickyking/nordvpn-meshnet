@@ -12,6 +12,9 @@ sleep 10
 # Set the token from file if ENV is not set
 [[ -z "${NORDVPN_TOKEN}" ]] && [[ -f "${NORDVPN_TOKENFILE}" ]] && NORDVPN_TOKEN="$(head -n 1 "${NORDVPN_TOKENFILE}")"
 
+# Make sure the token isn't destroyed on logout
+nordvpn logout --persist-token > /dev/null
+
 # Set settings for Synology compatibility
 nordvpn set technology openvpn
 nordvpn set protocol udp
