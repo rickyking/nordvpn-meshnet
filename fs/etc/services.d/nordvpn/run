@@ -5,7 +5,7 @@ if [[ ! -d /run/nordvpn ]]; then
 fi
 
 if [[ -n ${NORDVPN_MESHNET_DEBUG} ]]; then
-  exec s6-notifyoncheck -n 60 -d /usr/sbin/nordvpnd > /var/lib/nordvpn/nordvpnd.log 2>&1
+  exec s6-notifyoncheck -n 60 -d /usr/sbin/nordvpnd > /proc/1/fd/1 2>&1
 else
   exec s6-notifyoncheck -n 60 -d /usr/sbin/nordvpnd > /dev/null 2>&1
 fi
