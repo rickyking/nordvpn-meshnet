@@ -11,7 +11,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Install dependencies, get the NordVPN Repo, install NordVPN client, cleanup
 RUN echo "**** Install dependencies ****" && \
     apt-get update && \
-    apt-get install -y curl iputils-ping iproute2 && \
+    apt-get install -y curl iputils-ping iproute2 iptables && \
     echo "**** Install NordVPN ****" && \
     if [ -z "$NORDVPN_CLIENT_VERSION" ]; then \
         curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh | sh -s -- -n; \
@@ -38,4 +38,4 @@ COPY /fs /
 ENV S6_CMD_WAIT_FOR_SERVICES=1
 
 # Run the login, config, and watch scripts
-CMD nordvpn_login && meshnet_config && meshnet_watch
+CMD ["/bin/bash", "-c", "nordvpn_login && meshnet_config && meshnet_watch"]
