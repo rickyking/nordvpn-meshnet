@@ -6,13 +6,21 @@ IFS=','
 # Enable Meshnet, this creates the interface and connects
 echo "Enabling Meshnet..."
 count=0
-while [[ $(nordvpn set meshnet on) != *"Meshnet is set to 'on' successfully"* && $count -lt 5 ]]; do
-  ((count++))
-  echo "Failed to enable Meshnet, retrying... ($count/5)"
-  sleep 2
+meshnet_enabled=false
+
+while [[ $meshnet_enabled == false && $count -lt 5 ]]; do
+  result=$(nordvpn set meshnet on 2>&1)
+  
+  if [[ $result == *"Meshnet is set to 'on' successfully"* ]] || [[ $result == *"Meshnet is already enabled"* ]]; then
+    meshnet_enabled=true
+  else
+    ((count++))
+    echo "Failed to enable Meshnet, retrying... ($count/5)"
+    sleep 2
+  fi
 done
 
-if [[ $count -eq 5 ]]; then
+if [[ $meshnet_enabled == false ]]; then
   echo "Could not enable Meshnet after 5 attempts."
   exit 1
 fi
