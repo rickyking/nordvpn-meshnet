@@ -9,20 +9,17 @@ ARG NORDVPN_CLIENT_VERSION
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies, get the NordVPN Repo, install NordVPN client, cleanup
-RUN echo "**** Get NordVPN Repo ****" && \
-    curl -sSfL https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/nordvpn-release_1.0.0_all.deb --output /tmp/nordvpnrepo.deb && \
-    apt-get install -y /tmp/nordvpnrepo.deb && \
-    apt-get update -y && \
-    echo "**** Install NordVPN client ****" && \
+RUN echo "**** Install dependencies ****" && \
+    apt-get update && \
+    apt-get install -y curl && \
+    echo "**** Install NordVPN ****" && \
     if [ -z "$NORDVPN_CLIENT_VERSION" ]; then \
-        apt-get install -y nordvpn; \
+        curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh | sh -s -- -n; \
     else \
-        apt-get install -y nordvpn=${NORDVPN_CLIENT_VERSION}; \
+        curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh | sh -s -- -n -v "${NORDVPN_CLIENT_VERSION}"; \
     fi && \
     echo "**** Cleanup ****" && \
-    apt-get remove -y nordvpn-release && \
-    apt-get autoremove -y && \
-    apt-get autoclean -y && \
+    apt-get clean && \
     rm -rf \
         /tmp/* \
         /var/cache/apt/archives/* \
