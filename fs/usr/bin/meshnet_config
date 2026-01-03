@@ -20,7 +20,7 @@ meshnet_enabled=false
 while [[ $meshnet_enabled == false && $count -lt 5 ]]; do
   result=$(nordvpn set meshnet on 2>&1)
   
-  if [[ $result == *"Meshnet is set to 'on' successfully"* ]] || [[ $result == *"Meshnet is already enabled"* ]]; then
+  if [[ $result == *"Meshnet is set to 'on' successfully"* ]] || [[ $result == *"Meshnet is set to 'enabled' successfully"* ]] || [[ $result == *"Meshnet is already enabled"* ]]; then
     meshnet_enabled=true
   else
     ((count++))
